@@ -79,12 +79,12 @@ export default function Login(){
         <div>
             <Header/>
             <div className="bg-gray-100 min-h-content">
-                <div className='text-end py-6'>
+                <div className='text-end pt-6'>
                     <Button shape="circle" icon={<CloseOutlined />} onClick={_backtoHome}
                     className="mr-6 border-none font-black"></Button>
                 </div>
-                <div className='flex flex-col items-center mx-20'>
-                    <img src={logo} alt="logo" className='py-3'></img>
+                <div className='flex flex-col items-center mx-20 pt-12 pb-20'>
+                    <img src={logo} alt="logo" className='mb-3'></img>
                     <div className='text-lg text-gray-500 font-black mb-6'>
                         { _isLogin?`登入帳戶`:`建立帳戶`}
                     </div>
@@ -96,7 +96,7 @@ export default function Login(){
                             <img src={gmail}></img>
                         </button>
                     </div>
-                    <div className='text-base text-gray-500 my-6'>or</div>
+                    <div className='text-base text-gray-500 my-3'>or</div>
                     {_isLogin?
                     <></>:
                     <div className='w-full'>
