@@ -8,12 +8,11 @@ const initState = {
 
 const myReducer= (state = initState, action)=>{
     switch(action.type){
-        case LOGIN_STATUS:{
-            const status = state
+        case LOGIN_STATUS:
             return{
-                login_status: status
+                ...state,
+                login_status: action.payload.login_status
             }
-        }
         default:
             return state
     }
