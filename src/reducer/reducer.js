@@ -1,9 +1,11 @@
 import {
-    LOGIN_STATUS
+    LOGIN_STATUS,
+    SIGNING_FILE
 } from './actionType'
 
 const initState = {
-    login_status:false
+    login_status:false,
+    file:''
 }
 
 const myReducer= (state = initState, action)=>{
@@ -12,6 +14,11 @@ const myReducer= (state = initState, action)=>{
             return{
                 ...state,
                 login_status: action.payload.login_status
+            }
+        case SIGNING_FILE:
+            return{
+                ...state,
+                file: action.payload.file_data
             }
         default:
             return state

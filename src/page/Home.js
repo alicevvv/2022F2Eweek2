@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { Dispatch } from 'react';
+import { setSignFile } from '../actions/action';
 // component
 import Header from '../component/Header'
 // image
-// import uploadIcon from '../image/upload/upload-icon.png'
+import uploadIcon from '../image/upload/upload-icon.png'
 // style
 import { Button,message } from 'antd'
+import { useDispatch } from 'react-redux';
 
 // const { Dragger } = Upload;
 
@@ -13,6 +16,8 @@ export default function Start(){
     // flag
     // const [_loginForm,_setLoginForm] = useState(false);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const [_imgView,_setImgView] = useState()
 
     const _goLogin=()=>{
       // _setLoginForm(true)
@@ -45,6 +50,10 @@ export default function Start(){
     
       const onFileUpload = event => {
         console.log(event.target.files[0])
+        const url = URL.createObjectURL(event.target.files[0])
+        console.log(url)
+        _setImgView(url)
+        dispatch(setSignFile(url))
         navigate('/file')
       }
 
@@ -56,10 +65,30 @@ export default function Start(){
             <div className='min-h-content bg-gray-100 flex flex-col justify-center items-center'>
               <div className='text-base text-gray-500 mb-6'>急著簽名？快用閃簽！</div>
 
-            <button className='w-[320px] h-[180px] px-12 bg-gray-200 text-gray-500 rounded-xl'
+            {/* <button className='w-[320px] h-[180px] px-12 bg-gray-200 text-gray-500 rounded-xl'
             component="label">
-              <input className='' type="file" accept="image/*,.pdf" onChange={onFileUpload}/>
-            </button>
+            </button> */}
+            <label htmlFor='uploadBtn' 
+            className='w-[320px] flex flex-col justify-center px-12 py-6 bg-gray-200 text-gray-500 rounded-xl text-center'
+            style={{border:'2px #A1A1AA dashed'}}
+            >
+              <p className="ant-upload-drag-icon flex justify-center">
+                      <img src={uploadIcon} alt="檔案上傳"></img>
+                    </p>
+              <p className="ant-upload-text" style={{color:'#71717A'}}>上傳文件</p>
+              <p className="ant-upload-hint text-sm">
+              *限10mb內的PDF檔或JPG檔
+              </p>
+              <input
+                accept="image/*,.pdf"
+                style={{ display: 'none' }}
+                id="uploadBtn"
+                // multiple
+                type="file"
+                onChange={onFileUpload}
+              />
+              {/* <input name="" type="file" accept="image/*,.pdf" id='uploadBtn' className='hidden'/> */}
+            </label>
               {/* <div className='w-[320px]'>
                 <Dragger {...props} className="px-12 text-gray-500 rounded-xl" 
                 style={{background:'#E4E4E7',borderRadius:'12px',border:'2px #A1A1AA dashed'}}>
