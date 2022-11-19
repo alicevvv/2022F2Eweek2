@@ -57,6 +57,8 @@ export default function File(){
     const _handleSaveCanva=()=>{
         console.log('in save')
         const data = signCanvaRef.current.getSaveData()
+        const base64 = signCanvaRef.current.canvasContainer.childNodes[1].toDataURL()
+        const index = signList.length
         let saveBase64 = {'index':index,'url':base64}
         dispatch(addSign(saveBase64))
         _setSignModalOpen(false)
