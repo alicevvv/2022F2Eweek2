@@ -1,6 +1,7 @@
 import {
     LOGIN_STATUS,
-    SIGNING_FILE
+    SIGNING_FILE,
+    SIGN_LIST
 } from '../reducer/actionType'
 
 export const setLoginStatus = (changeStatus) => {
@@ -17,6 +18,15 @@ export const setSignFile = (sign_file) => {
         type:SIGNING_FILE,
         payload:{
             file_data:sign_file
+        }
+    }
+}
+
+export const addSign = (data) => {
+    return{
+        type:SIGN_LIST,
+        payload:{
+            sign_data:data
         }
     }
 }

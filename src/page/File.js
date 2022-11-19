@@ -1,11 +1,12 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import CanvasDraw from 'react-canvas-draw'
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
+import { addSign } from "../actions/action"
 // component
 import Header from "../component/Header"
 // style
-import { Modal, Menu } from 'antd'
+import { Modal } from 'antd'
 import './File.css'
 // image
 import back from '../image/button/back.png'
@@ -19,12 +20,13 @@ import { stickers } from "../json/sticker"
 
 export default function File(){
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [_showTools,_setShowTools] = useState(true)
-    const [_signModalOpen,_setSignModalOpen] = useState(false)
-    const [_stickerModalOpen,_setStickerModalOpen] = useState(false)
-    const [_signCanvasVisible,_setSignCanvasVisible] = useState(false)
+    const [_signModalOpen,_setSignModalOpen] = useState(false) // 簽名modal
+    const [_stickerModalOpen,_setStickerModalOpen] = useState(false) //貼圖modal
+    const [_signCanvasVisible,_setSignCanvasVisible] = useState(false) //簽名的繪製
     const signCanvaRef = useRef(null)
-    const displayCanva = useRef(null)
+    // const displayCanva = useRef(null)
     const _black='#000000'
     const _red='#E11D48'
     const _blue='#1D4ED8'
@@ -33,6 +35,8 @@ export default function File(){
     const [_blueStatus,_setBlueStatus] = useState(false)
     const [_redStatus,_setRedStatus] = useState(false)
     const theFile = useSelector(state=>state.file)
+    const signList = useSelector(state=>state.sign_lists)
+    // const [_testImg,_setTestImg] = useState()
 
     const _handleBack=()=>{
         navigate('/')
@@ -42,6 +46,7 @@ export default function File(){
     }
     const _handleSignModal=()=>{
         _setSignModalOpen(true)
+        console.log(signList)
     }
     const _handleStickerModal=()=>{
         _setStickerModalOpen(true)
@@ -50,18 +55,17 @@ export default function File(){
         _setSignCanvasVisible(!_signCanvasVisible)
     }
     const _handleSaveCanva=()=>{
+        console.log('in save')
         const data = signCanvaRef.current.getSaveData()
-        console.log(data)
-        // displayCanva.current.loadSaveData(data)
+        let saveBase64 = {'index':index,'url':base64}
+        dispatch(addSign(saveBase64))
+        _setSignModalOpen(false)
+        _setSignCanvasVisible(false)
     }
     const _handleClear=()=>{
         signCanvaRef.current.clear()
     }
-    const _handleBrushColor= color => e =>{
-        console.log(color)
-        console.log(e)
-        if(color =='black'){
-        }
+    const _handleBrushColor= color=>e =>{
         switch(color){
             case 'black':
                 _setBrushColor(_black)
@@ -85,6 +89,11 @@ export default function File(){
                 _setBrushColor(_black)
                 break;
         }
+    }
+
+    const _selectSign = (signIndex)=>{
+        _setSignModalOpen(false)
+        _setSignCanvasVisible(false)
     }
 
 
@@ -167,7 +176,6 @@ export default function File(){
                                 <button className="absolute hover:opacity-70" style={{bottom:0,right:0}}
                                     onClick={_handleClear}
                                 ><img src={trash} alt="清除畫布"></img></button>
-                                {/* <button onClick={_handleSaveCanva}>save</button> */}
                             </div>
                             <div className="flex justify-center mt-4">
                                 <button className={`rounded-full w-6 h-6 bg-black mx-2 ${_blackStatus?`border-gray-300 border-2`:``}`} onClick={_handleBrushColor('black')}></button>
@@ -176,17 +184,43 @@ export default function File(){
                             </div>
                             <div className="grid grid-cols-2 gap-4 mt-6">
                                 <button className="drop-shadow-lg bg-white text-gray-500 py-3 rounded-2xl"
-                                onClick={()=>{_setSignModalOpen(false);_handleClear()}}
+                                onClick={()=>{_setSignModalOpen(false);_handleClear();_setSignCanvasVisible(false)}}
                                 >取消</button>
                                 <button className="drop-shadow-lg bg-yellow-500 text-white py-3 rounded-2xl"
-                                onClick={()=>{_handleSaveCanva();_setSignModalOpen(false)}}
+                                onClick={_handleSaveCanva}
                                 >確認</button>
                             </div>
-                        </div>:
-                        <button className="flex items-center justify-center text-center border-yellow-500
-                        border-2  w-full text-xl py-3 rounded-xl" style={{boxShadow:''}}
-                        onClick={_handleSign}>
+                        </div>
+                        :
+                        <div className="flex flex-col">
+                            {
+                                signList.length ===0?
+                                <></>:<>
+                                    {
+                                    signList.map((item,index)=>{
+                                        return(
+                                            <div className="flex items-center justify-between text-center border-yellow-500
+                                            border-2  w-full text-xl rounded-2xl hover:bg-gray-200 hover:border-black hover:text-white
+                                            mb-2" key={item.index}>
+                                                <button className="flex-auto"
+                                                name={item.index}
+                                                onClick={()=>{_selectSign(index)}}
+                                                >
+                                                    <img src={item.url} alt="簽名" className="h-12"></img>
+                                                </button>
+                                                <button>
+                                                    <img src={trash} alt="刪除簽名"></img>
+                                                </button>
+                                            </div>
+                                        )
+                                    })}
+                                </>
+                            }
+                            <button className="flex items-center justify-center text-center border-yellow-500
+                                border-2  w-full text-xl py-3 rounded-2xl hover:bg-black hover:border-black hover:text-white"
+                                onClick={_handleSign}>
                             製作簽名<img src={plus} alt="製作簽名" className="ml-2"></img></button>
+                        </div>
                     }
                 </div>
             </Modal>

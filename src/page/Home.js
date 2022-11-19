@@ -54,6 +54,10 @@ export default function Start(){
         console.log(url)
         _setImgView(url)
         dispatch(setSignFile(url))
+        // if(event.target.files[0].type == 'application/pdf'){
+        //   console.log('is pdf');
+        // }
+
         navigate('/file')
       }
 

@@ -1,11 +1,13 @@
 import {
     LOGIN_STATUS,
-    SIGNING_FILE
+    SIGNING_FILE,
+    SIGN_LIST,
 } from './actionType'
 
 const initState = {
     login_status:false,
-    file:''
+    file:'',
+    sign_lists:[]
 }
 
 const myReducer= (state = initState, action)=>{
@@ -19,6 +21,11 @@ const myReducer= (state = initState, action)=>{
             return{
                 ...state,
                 file: action.payload.file_data
+            }
+        case SIGN_LIST:
+            return{
+                ...state,
+                sign_lists:state.sign_lists.concat(action.payload.sign_data)
             }
         default:
             return state
