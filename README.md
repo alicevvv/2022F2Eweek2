@@ -12,11 +12,10 @@
 
 ## 資料夾說明
 
-- src
--- component：網頁Header
--- image：照片
--- json：部分重複性資料
--- page：頁面
+- component：網頁Header
+- image：照片
+- json：部分重複性資料
+- page：頁面
 
 
 ## 使用技術
