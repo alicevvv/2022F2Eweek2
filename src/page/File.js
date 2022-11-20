@@ -147,22 +147,27 @@ export default function File(){
 
 
     useEffect(()=>{
-        const canvas = new fabric.Canvas('mainCanvas')
-        canvas.setBackgroundImage(theFile, canvas.renderAll.bind(canvas), {
-            originX: "left",
-            originY: "top",
-            width: canvas.getWidth(),
-            height: canvas.getHeight(),
-            scaleX: 1,
-            scaleY: 1,
-         });
+        const canvas = new fabric.Canvas('mainCanvas',{
+            width:window.innerWidth,
+            height:window.innerHeight
+        })
+        
+        fabric.Image.fromURL(theFile,function(img){
+            var imgX = canvas.width / img.width
+            canvas.setBackgroundImage(theFile, canvas.renderAll.bind(canvas), {
+                width: canvas.width,
+                height: canvas.height,
+                scaleX: imgX,
+                scaleY: imgX,
+             });
+        })
         _setCanva(canvas)
     },[])
 
     return(
         <div className="relative">
             <Header/>
-            <div className="bg-gray-100 min-h-content pb-8">
+            <div className="bg-gray-100 min-h-content pb-8 h-auto overflow-scroll">
                 <div className="grid grid-cols-3 py-4 bg-white">
                     <button onClick={_handleBack}>
                         <img src={back} alt="回上一頁" className="pl-6"></img>
@@ -170,11 +175,11 @@ export default function File(){
                     <div className="text-gray-500 text-center">檔案名稱.pdf</div>
                     <div></div>
                 </div>
-                <div className="pt-8 mb-8">
+                {/* <div className="pt-8 mb-8">
                     <div className="text-center text-gray-500">共87頁，第 8 頁</div>
-                </div>
+                </div> */}
                 <div className="py-3">
-                    <canvas id='mainCanvas' className="py-3" width="200"></canvas>
+                    <canvas id='mainCanvas' className="py-3" width="100%"></canvas>
                 </div>
             </div>
             <div className="absolute w-auto h-auto" style={{bottom:'60px',right:'36px'}}>

@@ -85,7 +85,7 @@ export default function Start(){
               {/* *限10mb內的PDF檔或JPG檔 */}
               </p>
               <input
-                accept="image/*,.pdf"
+                accept="image/*" //,.pdf
                 style={{ display: 'none' }}
                 id="uploadBtn"
                 // multiple
