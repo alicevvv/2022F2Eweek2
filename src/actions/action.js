@@ -1,7 +1,8 @@
 import {
     LOGIN_STATUS,
     SIGNING_FILE,
-    SIGN_LIST
+    SIGN_LIST,
+    SIGN_DELETE
 } from '../reducer/actionType'
 
 export const setLoginStatus = (changeStatus) => {
@@ -27,6 +28,15 @@ export const addSign = (data) => {
         type:SIGN_LIST,
         payload:{
             sign_data:data
+        }
+    }
+}
+
+export const setSignLists = (allData) =>{
+    return{
+        type:SIGN_DELETE,
+        payload:{
+            sign_lists:allData
         }
     }
 }

@@ -6,6 +6,7 @@ import { setSignFile } from '../actions/action';
 import Header from '../component/Header'
 // image
 import uploadIcon from '../image/upload/upload-icon.png'
+import homeLogo from '../image/lg-home.png'
 // style
 import { Button,message } from 'antd'
 import { useDispatch } from 'react-redux';
@@ -66,50 +67,38 @@ export default function Start(){
     return(
         <div>
             <Header/>
-            <div className='min-h-content bg-gray-100 flex flex-col justify-center items-center'>
-              <div className='text-base text-gray-500 mb-6'>急著簽名？快用閃簽！</div>
-
-            {/* <button className='w-[320px] h-[180px] px-12 bg-gray-200 text-gray-500 rounded-xl'
-            component="label">
-            </button> */}
-            <label htmlFor='uploadBtn' 
-            className='w-[320px] flex flex-col justify-center px-12 py-6 bg-gray-200 text-gray-500 rounded-xl text-center'
-            style={{border:'2px #A1A1AA dashed'}}
-            >
-              <p className="ant-upload-drag-icon flex justify-center">
-                      <img src={uploadIcon} alt="檔案上傳"></img>
-                    </p>
-              <p className="ant-upload-text" style={{color:'#71717A'}}>上傳文件</p>
-              <p className="ant-upload-hint text-sm">
-              *限10mb內的JPG檔
-              {/* *限10mb內的PDF檔或JPG檔 */}
-              </p>
-              <input
-                accept="image/*" //,.pdf
-                style={{ display: 'none' }}
-                id="uploadBtn"
-                // multiple
-                type="file"
-                onChange={onFileUpload}
-              />
-              {/* <input name="" type="file" accept="image/*,.pdf" id='uploadBtn' className='hidden'/> */}
-            </label>
-              {/* <div className='w-[320px]'>
-                <Dragger {...props} className="px-12 text-gray-500 rounded-xl" 
-                style={{background:'#E4E4E7',borderRadius:'12px',border:'2px #A1A1AA dashed'}}>
-                    <p className="ant-upload-drag-icon flex justify-center">
-                      <img src={uploadIcon} alt="檔案上傳"></img>
-                    </p>
-                    <p className="ant-upload-text" style={{color:'#71717A'}}>上傳文件</p>
-                    <p className="ant-upload-hint text-sm">
-                    *限10mb內的PDF檔或JPG檔
-                    </p>
-                </Dragger>
-              </div> */}
-              <div className='text-base text-gray-500 my-6'>or</div>
-              <Button size='large' onClick={_goLogin}
-              className='w-48 bg-yellow-500 hover:bg-black hover:text-white rounded-lg border-none mb-3'>登入</Button>
-              <div className='text-base text-gray-500 mb-6'>管理我的文件和簽名</div>
+            <div className='min-h-content bg-gray-100 flex items-center justify-center'>
+              <div className='hidden lg:flex items-center justify-center pr-24'>
+                <img src={homeLogo}></img>
+              </div>
+              <div className='flex flex-col justify-center items-center'>
+                <div className='text-base text-gray-500 mb-6'>急著簽名？快用閃簽！</div>
+                <label htmlFor='uploadBtn' 
+                className='w-[320px] flex flex-col justify-center px-12 py-6 bg-gray-200 text-gray-500 rounded-xl text-center'
+                style={{border:'2px #A1A1AA dashed'}}
+                >
+                  <p className="ant-upload-drag-icon flex justify-center">
+                          <img src={uploadIcon} alt="檔案上傳"></img>
+                        </p>
+                  <p className="ant-upload-text" style={{color:'#71717A'}}>上傳文件</p>
+                  <p className="ant-upload-hint text-sm">
+                  *限10mb內的JPG檔
+                  {/* *限10mb內的PDF檔或JPG檔 */}
+                  </p>
+                  <input
+                    accept="image/*" //,.pdf
+                    style={{ display: 'none' }}
+                    id="uploadBtn"
+                    // multiple
+                    type="file"
+                    onChange={onFileUpload}
+                  />
+                </label>
+                  <div className='text-base text-gray-500 my-6'>or</div>
+                  <Button size='large' onClick={_goLogin}
+                  className='w-48 bg-yellow-500 hover:bg-black hover:text-white rounded-lg border-none mb-3'>登入</Button>
+                  <div className='text-base text-gray-500 mb-6'>管理我的文件和簽名</div>
+              </div>
           </div>
         </div>
     )

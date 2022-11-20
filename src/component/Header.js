@@ -7,7 +7,7 @@ import logo from '../image/logo/logo-header.png'
 import logoMember from '../image/logo/logo-member.png'
 import member from '../image/member.png'
 // style
-import { Drawer,Button } from 'antd'
+import { Drawer,Button,message } from 'antd'
 
 export default function Header(){
     const [_open,_setOpen]=useState(false);
@@ -35,7 +35,9 @@ export default function Header(){
 
     return(
         <div className='w-full h-header bg-black px-12 flex items-center justify-between'>
+            <button onClick={()=>{navigate('/')}}>
             <img src={logo} alt="logo"></img>
+            </button>
             <button onClick={_drawerOpen}>
                 <img src={member} alt="會員登入"></img>
             </button>
@@ -49,12 +51,12 @@ export default function Header(){
                     <div className='w-full flex flex-col items-center'>
                         <img src={logoMember} alt="logo" className="mt-12 mb-3"></img>
                         <div className='text-gray-500 mb-12'>歡迎， pabi</div>
-                        <Button className='my-2 border-none shadow-none text-lg'>管理文件</Button>
-                        <Button className='my-2 border-none shadow-none text-lg'>我的簽名</Button>
-                        <Button className='my-2 border-none shadow-none text-lg'>我的收藏</Button>
-                        <Button className='my-2 border-none shadow-none text-lg'>設定</Button>
-                        <Button className='my-2 border-none shadow-none text-lg'>幫助</Button>
-                        <Button className='my-2 border-none shadow-none text-lg mt-6'
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black' onClick={()=>{message.info('Oops 抱歉！這邊沒有東西');_drawerClose()}}>管理文件</Button>
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black' onClick={()=>{message.info('Oops 抱歉！這邊沒有東西');_drawerClose()}}>我的簽名</Button>
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black' onClick={()=>{message.info('Oops 抱歉！這邊沒有東西');_drawerClose()}}>我的收藏</Button>
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black' onClick={()=>{message.info('Oops 抱歉！這邊沒有東西');_drawerClose()}}>設定</Button>
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black' onClick={()=>{message.info('Oops 抱歉！這邊沒有東西');_drawerClose()}}>幫助</Button>
+                        <Button className='my-2 border-none shadow-none text-lg hover:bg-yellow-500 hover:text-black mt-6'
                         onClick={_handleLogOut}>登出</Button>
                     </div>
                     :

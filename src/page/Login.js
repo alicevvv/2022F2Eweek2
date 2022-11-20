@@ -54,6 +54,8 @@ export default function Login(){
             message.error('帳號或密碼錯誤')
         }else{
             dispatch(setLoginStatus(true))
+            message.success('登入成功！')
+            navigate('/')
         }
     }
 
@@ -99,7 +101,7 @@ export default function Login(){
                     <div className='text-base text-gray-500 my-3'>or</div>
                     {_isLogin?
                     <></>:
-                    <div className='w-full'>
+                    <div className='w-full max-w-xs'>
                         <Input size="large" placeholder='暱稱' prefix={<img src={inputName} className="mx-2"/>}
                         status={_nameStatus} onChange={_handleName}
                         className="rounded-xl my-2 p-2">
@@ -110,7 +112,7 @@ export default function Login(){
                             :<></>
                         }
                     </div>}
-                    <div className='w-full'>
+                    <div className='w-full max-w-xs'>
                         <Input size="large" placeholder='電子郵件' prefix={<img src={inputMail} className="mx-2"/>}
                         status={_mailStatus} onChange={_handleEmail}
                         className="rounded-xl my-2 p-2">
@@ -121,7 +123,7 @@ export default function Login(){
                             :<></>
                         }
                     </div>
-                    <div className='w-full'>
+                    <div className='w-full max-w-xs'>
                         <Input.Password size="large" placeholder='密碼' prefix={<img src={inputLock} className="mx-2" />}
                         status={_passwordStatus} onChange={_handlePassword}
                         className="rounded-xl my-2 p-2"/>
@@ -134,12 +136,13 @@ export default function Login(){
                     <button className='border-none text-red-500 mb-4'>忘記密碼？</button>
                     <Button size='large'
                     onClick={_handleLogin}
-                    className='w-full bg-yellow-500 hover:bg-black hover:text-white rounded-lg border-none mb-3 disabled:opacity-50'>
+                    className='w-full max-w-xs bg-yellow-500 hover:bg-black hover:text-white rounded-lg border-none mb-3 disabled:opacity-50'
+                    >
                         {_isLogin?`登入`:`註冊`}</Button>
                     <div className='flex'>
                         <div className='text-sm text-gray-500'>{_isLogin?`還沒有帳戶？`:`已經有帳戶？`}</div>
                         <button className='border-none text-red-500 hover:underline hover:underline-offset-4'
-                         onClick={_handleLoginSign}>{_isLogin?`建立帳戶`:`前往登入`}</button>
+                            onClick={_handleLoginSign}>{_isLogin?`建立帳戶`:`前往登入`}</button>
                     </div>
                 </div>
             </div>

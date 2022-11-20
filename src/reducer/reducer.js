@@ -2,6 +2,7 @@ import {
     LOGIN_STATUS,
     SIGNING_FILE,
     SIGN_LIST,
+    SIGN_DELETE
 } from './actionType'
 
 const initState = {
@@ -26,6 +27,11 @@ const myReducer= (state = initState, action)=>{
             return{
                 ...state,
                 sign_lists:state.sign_lists.concat(action.payload.sign_data)
+            }
+        case SIGN_DELETE:
+            return{
+                ...state,
+                sign_lists:action.payload.allData
             }
         default:
             return state

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import CanvasDraw from 'react-canvas-draw'
 import { useSelector, useDispatch } from "react-redux"
-import { addSign, setSignFile } from "../actions/action"
+import { addSign, setSignLists } from "../actions/action"
 // component
 import Header from "../component/Header"
 // style
@@ -152,11 +152,18 @@ export default function File(){
         navigate('/')
     }
 
+    const _handleDeleteSign = (signIndex) =>{
+        console.log(signList)
+        console.log(signIndex)
+        signList.splice(signIndex,1)
+        _setSignModalOpen(false)
+    }
+
 
     useEffect(()=>{
         const canvas = new fabric.Canvas('mainCanvas',{
             width:window.innerWidth,
-            height: 480
+            height: window.innerHeight
         })
         fabric.Image.fromURL(theFile,function(img){
             var imgX = canvas.width / img.width
@@ -183,10 +190,7 @@ export default function File(){
                     <div className="text-gray-500 text-center">檔案名稱.pdf</div>
                     <div></div>
                 </div>
-                {/* <div className="pt-8 mb-8">
-                    <div className="text-center text-gray-500">共87頁，第 8 頁</div>
-                </div> */}
-                <div className="py-3">
+                <div className="py-3 flex items-center">
                     <canvas id='mainCanvas' className="py-3" width="100%"></canvas>
                 </div>
             </div>
@@ -317,7 +321,7 @@ export default function File(){
                                                     <img src={item.url} alt="簽名" className="h-12"></img>
                                                 </button>
                                                 <button>
-                                                    <img src={trash} alt="刪除簽名"></img>
+                                                    <img src={trash} alt="刪除簽名" onClick={()=>{_handleDeleteSign(index)}}></img>
                                                 </button>
                                             </div>
                                         )
