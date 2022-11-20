@@ -61,7 +61,6 @@ export default function File(){
         _setSignCanvasVisible(!_signCanvasVisible)
     }
     const _handleSaveCanva=()=>{
-        console.log('in save')
         const data = signCanvaRef.current.getSaveData()
         const base64 = signCanvaRef.current.canvasContainer.childNodes[1].toDataURL()
         const index = signList.length
@@ -69,6 +68,14 @@ export default function File(){
         dispatch(addSign(saveBase64))
         _setSignModalOpen(false)
         _setSignCanvasVisible(false)
+        
+        fabric.Image.fromURL(base64,function(img){
+            img.scale(0.8)
+            _canva.add(img)
+            _canva.renderAll()
+        })
+
+        _setExportBtnVisible(true)
     }
     const _handleClear=()=>{
         signCanvaRef.current.clear()
@@ -149,16 +156,17 @@ export default function File(){
     useEffect(()=>{
         const canvas = new fabric.Canvas('mainCanvas',{
             width:window.innerWidth,
-            height:window.innerHeight
+            height: 480
         })
-        
         fabric.Image.fromURL(theFile,function(img){
             var imgX = canvas.width / img.width
+            var imgWidth = img.width
+            var imgHeight = img.height
             canvas.setBackgroundImage(theFile, canvas.renderAll.bind(canvas), {
-                width: canvas.width,
-                height: canvas.height,
                 scaleX: imgX,
                 scaleY: imgX,
+                width: imgWidth,
+                height: imgHeight
              });
         })
         _setCanva(canvas)
@@ -167,7 +175,7 @@ export default function File(){
     return(
         <div className="relative">
             <Header/>
-            <div className="bg-gray-100 min-h-content pb-8 h-auto overflow-scroll">
+            <div className="bg-gray-100 min-h-content pb-8">
                 <div className="grid grid-cols-3 py-4 bg-white">
                     <button onClick={_handleBack}>
                         <img src={back} alt="回上一頁" className="pl-6"></img>
@@ -202,16 +210,16 @@ export default function File(){
                 </div>
             </div>
             {
-                _exportBtnVisible?
-                <div className="absolute" style={{bottom:'24px'}}>
-                    <div className="w-screen flex justify-center">
-                    <button className="mx-16 w-full bg-yellow-500 py-3 rounded-2xl"
-                        onClick={_handleExport}
-                    >輸出檔案</button>
+                    _exportBtnVisible?
+                    <div className="absolute" style={{bottom:'16px'}}>
+                        <div className="w-screen flex justify-center">
+                        <button className="mx-16 w-full bg-yellow-500 py-3 rounded-2xl"
+                            onClick={_handleExport}
+                        >輸出檔案</button>
+                        </div>
                     </div>
-                </div>
-                :<></>
-            }
+                    :<></>
+                }
             <Modal
                 centered
                 open={_signModalOpen}
