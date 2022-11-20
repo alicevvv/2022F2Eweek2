@@ -81,7 +81,8 @@ export default function Start(){
                     </p>
               <p className="ant-upload-text" style={{color:'#71717A'}}>上傳文件</p>
               <p className="ant-upload-hint text-sm">
-              *限10mb內的PDF檔或JPG檔
+              *限10mb內的JPG檔
+              {/* *限10mb內的PDF檔或JPG檔 */}
               </p>
               <input
                 accept="image/*,.pdf"

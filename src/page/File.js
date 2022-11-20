@@ -2,11 +2,11 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import CanvasDraw from 'react-canvas-draw'
 import { useSelector, useDispatch } from "react-redux"
-import { addSign } from "../actions/action"
+import { addSign, setSignFile } from "../actions/action"
 // component
 import Header from "../component/Header"
 // style
-import { Modal } from 'antd'
+import { message, Modal } from 'antd'
 import './File.css'
 // image
 import back from '../image/button/back.png'
@@ -15,6 +15,7 @@ import sign from '../image/signing/btn-pen.png'
 import sticker from '../image/signing/btn-sticker.png'
 import plus from '../image/button/solid-plus-circle.png'
 import trash from '../image/button/trash.png'
+import upload from '../image/upload/sign_upload.png'
 // json
 import { stickers } from "../json/sticker"
 // fabric
@@ -27,6 +28,7 @@ export default function File(){
     const [_signModalOpen,_setSignModalOpen] = useState(false) // 簽名modal
     const [_stickerModalOpen,_setStickerModalOpen] = useState(false) //貼圖modal
     const [_signCanvasVisible,_setSignCanvasVisible] = useState(false) //簽名的繪製
+    const [_drawSignVisible,_setDrawSignVisible] = useState(true) // 繪製簽名 or 上傳
     const signCanvaRef = useRef(null)
     // const displayCanva = useRef(null)
     const _black='#000000'
@@ -40,6 +42,7 @@ export default function File(){
     const signList = useSelector(state=>state.sign_lists)
     // const [_testImg,_setTestImg] = useState()
     const [_canva,_setCanva] = useState('')
+    const [_exportBtnVisible,_setExportBtnVisible] = useState(false)
 
     const _handleBack=()=>{
         navigate('/')
@@ -104,18 +107,54 @@ export default function File(){
             _canva.add(img)
             _canva.renderAll()
         })
+        _setExportBtnVisible(true)
+    }
+    const _selectSticker = (stickerIndex) =>{
+        _setStickerModalOpen(false)
+        console.log(stickerIndex)
+        fabric.Image.fromURL(stickers[stickerIndex].url,function(img){
+            img.scale(0.8)
+            _canva.add(img)
+            _canva.renderAll()
+        })
+        _setExportBtnVisible(true)
+    }
+
+    const onSignUpload = event =>{
+        console.log(event.target.files[0])
+        const url = URL.createObjectURL(event.target.files[0])
+        const index = signList.length
+        let saveImg = {'index':index,'url':url}
+        console.log(saveImg)
+        dispatch(addSign(saveImg))
+        _setSignModalOpen(false)
+        _setSignCanvasVisible(false)
+        _setDrawSignVisible(true)
+    }
+
+    const _handleExport = () =>{
+        var image = _canva.toDataURL("image/jpg").replace("image/png",
+        "image/octet-stream");
+        const a = document.createElement('a');
+        a.href = image
+        a.download = `image.jpeg`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a) 
+        message.success('下載成功')
+        navigate('/')
     }
 
 
     useEffect(()=>{
-
         const canvas = new fabric.Canvas('mainCanvas')
         canvas.setBackgroundImage(theFile, canvas.renderAll.bind(canvas), {
-            // height:canvas.height,
             originX: "left",
             originY: "top",
             width: canvas.getWidth(),
             height: canvas.getHeight(),
+            scaleX: 1,
+            scaleY: 1,
          });
         _setCanva(canvas)
     },[])
@@ -157,6 +196,17 @@ export default function File(){
                         <img src={tools} alt='展開工具'></img></button>
                 </div>
             </div>
+            {
+                _exportBtnVisible?
+                <div className="absolute" style={{bottom:'24px'}}>
+                    <div className="w-screen flex justify-center">
+                    <button className="mx-16 w-full bg-yellow-500 py-3 rounded-2xl"
+                        onClick={_handleExport}
+                    >輸出檔案</button>
+                    </div>
+                </div>
+                :<></>
+            }
             <Modal
                 centered
                 open={_signModalOpen}
@@ -171,35 +221,57 @@ export default function File(){
                         _signCanvasVisible?
                         <div className="w-full">
                             <div className="flex w-full items-center">
-                                <button className="flex-auto bg-yellow-500 border-yellow-500 border-2 py-3 rounded-t-2xl text-white text-xl">
+                                <button className={`flex-auto border-yellow-500 border-2 py-3 rounded-t-2xl text-xl ${_drawSignVisible?`bg-yellow-500 text-white`:`bg-white text-gray-500`}`}
+                                    onClick={()=>{_setDrawSignVisible(true)}}
+                                >
                                     繪製簽名</button>
-                                <button className="flex-auto bg-white border-yellow-500 border-2 py-3 rounded-t-2xl text-gray-500 text-xl">
+                                <button className={`flex-auto border-yellow-500 border-2 py-3 rounded-t-2xl text-xl ${_drawSignVisible?`bg-white text-gray-500`:`bg-yellow-500 text-white`}`}
+                                    onClick={()=>{_setDrawSignVisible(false)}}
+                                >
                                     上傳簽名</button>
                             </div>
-                            <div className="bg-yellow-50 border-yellow-500 border-b-2 border-l-2 border-r-2 rounded-b-2xl h-48 relative">
-                                <CanvasDraw
-                                    brushRadius={3}
-                                    className='bg-yellow-100 rounded-b-2xl'
-                                    ref={signCanvaRef}
-                                    style={{
-                                        margin: 'auto',
-                                        backgroundColor:'#FEFCE8',width:'100%',height:'100%',
-                                    }}
-                                    brushColor={_brushColor}
-                                    hideGrid
-                                />
-                                {/* <CanvasDraw
-                                    className="border-black border-2"
-                                    ref={displayCanva}
-                                    disabled={true}
-                                    style={{
-                                        borderRadius: 1,  margin: 'auto',width:'300px',height:'150px',
-                                    }}
-                                /> */}
-                                <button className="absolute hover:opacity-70" style={{bottom:0,right:0}}
-                                    onClick={_handleClear}
-                                ><img src={trash} alt="清除畫布"></img></button>
-                            </div>
+                            {
+                                _drawSignVisible?
+                                <div className="bg-yellow-50 border-yellow-500 border-b-2 border-l-2 border-r-2 rounded-b-2xl h-48 relative">
+                                    
+                                    <CanvasDraw
+                                        brushRadius={3}
+                                        className='bg-yellow-100 rounded-b-2xl'
+                                        ref={signCanvaRef}
+                                        style={{
+                                            margin: 'auto',
+                                            backgroundColor:'#FEFCE8',width:'100%',height:'100%',
+                                        }}
+                                        brushColor={_brushColor}
+                                        hideGrid
+                                    />
+                                    <button className="absolute hover:opacity-70" style={{bottom:0,right:0}}
+                                        onClick={_handleClear}
+                                    ><img src={trash} alt="清除畫布"></img></button>
+                                </div>
+                                :
+                                <div className="bg-yellow-50 border-yellow-500 border-b-2 border-l-2 border-r-2 rounded-b-2xl h-48">
+                                    {/* <img src={upload} alt="上傳"></img> */}
+                                    <label htmlFor='uploadBtn' 
+                                    className='flex flex-col justify-center px-12 py-6 text-gray-500 rounded-xl text-center'
+                                    >
+                                        <p className="ant-upload-drag-icon flex justify-center">
+                                            <img src={upload} alt="檔案上傳"></img>
+                                        </p>
+                                        <p className="ant-upload-hint text-sm">
+                                        *限10mb內的JPG檔
+                                        {/* *限10mb內的PDF檔或JPG檔 */}
+                                        </p>
+                                        <input
+                                            accept="image/*,.pdf"
+                                            style={{ display: 'none' }}
+                                            id="uploadBtn"
+                                            type="file"
+                                            onChange={onSignUpload}
+                                        />
+                                    </label>
+                                </div>
+                            }
                             <div className="flex justify-center mt-4">
                                 <button className={`rounded-full w-6 h-6 bg-black mx-2 ${_blackStatus?`border-gray-300 border-2`:``}`} onClick={_handleBrushColor('black')}></button>
                                 <button className={`rounded-full w-6 h-6 bg-blue-700 mx-2 ${_blueStatus?`border-gray-300 border-2`:``}`} onClick={_handleBrushColor('blue')}></button>
@@ -259,10 +331,10 @@ export default function File(){
                     <div className="text-center font-bold text-xl text-gray-500 mb-3">我的貼圖</div>
                     <div className="flex flex-wrap">
                         {
-                            stickers.map((item)=>{
+                            stickers.map((item,index)=>{
                                 return(
                                     <span key={item.key}>
-                                        <button className="mx-2">
+                                        <button className="mx-2" onClick={()=>{_selectSticker(index)}}>
                                             <img src={item.url} alt={`sticker${item.index}`}></img>
                                         </button>
                                     </span>
