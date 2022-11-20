@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import CanvasDraw from 'react-canvas-draw'
 import { useSelector, useDispatch } from "react-redux"
@@ -17,6 +17,8 @@ import plus from '../image/button/solid-plus-circle.png'
 import trash from '../image/button/trash.png'
 // json
 import { stickers } from "../json/sticker"
+// fabric
+import { fabric } from 'fabric'
 
 export default function File(){
     const navigate = useNavigate()
@@ -37,6 +39,7 @@ export default function File(){
     const theFile = useSelector(state=>state.file)
     const signList = useSelector(state=>state.sign_lists)
     // const [_testImg,_setTestImg] = useState()
+    const [_canva,_setCanva] = useState('')
 
     const _handleBack=()=>{
         navigate('/')
@@ -96,13 +99,31 @@ export default function File(){
     const _selectSign = (signIndex)=>{
         _setSignModalOpen(false)
         _setSignCanvasVisible(false)
+        fabric.Image.fromURL(signList[signIndex].url,function(img){
+            img.scale(0.8)
+            _canva.add(img)
+            _canva.renderAll()
+        })
     }
 
+
+    useEffect(()=>{
+
+        const canvas = new fabric.Canvas('mainCanvas')
+        canvas.setBackgroundImage(theFile, canvas.renderAll.bind(canvas), {
+            // height:canvas.height,
+            originX: "left",
+            originY: "top",
+            width: canvas.getWidth(),
+            height: canvas.getHeight(),
+         });
+        _setCanva(canvas)
+    },[])
 
     return(
         <div className="relative">
             <Header/>
-            <div className="bg-gray-100 min-h-content">
+            <div className="bg-gray-100 min-h-content pb-8">
                 <div className="grid grid-cols-3 py-4 bg-white">
                     <button onClick={_handleBack}>
                         <img src={back} alt="回上一頁" className="pl-6"></img>
@@ -110,11 +131,11 @@ export default function File(){
                     <div className="text-gray-500 text-center">檔案名稱.pdf</div>
                     <div></div>
                 </div>
-                <div className="py-8">
+                <div className="pt-8 mb-8">
                     <div className="text-center text-gray-500">共87頁，第 8 頁</div>
                 </div>
-                <div className="flex justify-center px-6">
-                    <img src={theFile} alt="要簽名的檔案"></img>
+                <div className="py-3">
+                    <canvas id='mainCanvas' className="py-3" width="200"></canvas>
                 </div>
             </div>
             <div className="absolute w-auto h-auto" style={{bottom:'60px',right:'36px'}}>
