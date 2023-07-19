@@ -97,7 +97,7 @@ export default function Start(){
                   <div className='text-base text-gray-500 my-6'>or</div>
                   <Button size='large' onClick={_goLogin}
                   className='w-48 bg-yellow-500 hover:bg-black hover:text-white rounded-lg border-none mb-3'>登入</Button>
-                  <div className='text-base text-gray-500 mb-6'>管理我的文件和簽名</div>
+                  <div className='text-base text-gray-500 mb-6'>管理文件和簽名</div>
               </div>
           </div>
         </div>
